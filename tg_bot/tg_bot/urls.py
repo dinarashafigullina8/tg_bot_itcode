@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from project.views import new_request
+from project.views import NewRequestView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('add_request/', new_request, name='add_request')
+    path('api/v1/add_request/', NewRequestView.as_view(), name='add_request')
 ]

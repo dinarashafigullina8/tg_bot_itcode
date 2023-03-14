@@ -1,22 +1,23 @@
+from django.forms import model_to_dict
 from django.shortcuts import render
 from project.forms import AddRequestForm
 from project.models import Request
-from main import send_message
-from send_mail import send_email
+# from main import send_message
+from send_mail import main
+import telebot
+from project.config import token
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
-def new_request(request):
-    if request.method == 'POST':
-        form = AddRequestForm(request.POST)
-        if form.is_valid:
-            form.save()
-            send_message()
-            send_email()
-            
-    else:
-        form = AddRequestForm
-    context = {
-        'form': form,
-        'title': 'Новая заявка'
-    }
-    return render(request, 'template.html', context=context)
-    
+
+
+class NewRequestView(APIView):
+    def post(self, request):
+        request_new = Request.objects.create(
+            region=request.data['region']
+        )
+        main()
+        # send_message()
+        return Response(model_to_dict(request_new))
+        
+
